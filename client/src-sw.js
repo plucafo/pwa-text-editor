@@ -19,6 +19,19 @@ const pageCache = new CacheFirst({
   ],
 });
 
+// Cache assets using a CacheFirst strategy
+const assetCache = new CacheFirst({
+  cacheName: 'asset-cache',
+  plugins: [
+    new CacheableResponsePlugin({
+      statuses: [0, 200],
+    }),
+    new ExpirationPlugin({
+      maxAgeSeconds: 30 * 24 * 60 * 60, // Cache assets for 30 days
+    }),
+  ],
+});
+
 warmStrategyCache({
   urls: ['/index.html', '/'],
   strategy: pageCache,
@@ -27,4 +40,13 @@ warmStrategyCache({
 registerRoute(({ request }) => request.mode === 'navigate', pageCache);
 
 // TODO: Implement asset caching
-registerRoute();
+registerRoute(
+  ({ request }) => request.destination === 'script' || request.destination === 'style' || request.destination === 'image',
+  assetCache
+);
+
+// Implement offline fallback for other routes
+offlineFallback({
+  pageFallback: '/offline.html', // Customize the offline page URL as needed
+  fallback: assetCache,
+});
