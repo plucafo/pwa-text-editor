@@ -56,10 +56,6 @@ h1 {
   height: calc(100vh - var(--navbar-height));
 }
 
-#buttonInstall {
-  visibility: hidden;
-}
-
 #buttonInstall.hidden {
   display: none;
 }
