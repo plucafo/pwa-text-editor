@@ -15,12 +15,10 @@ const initdb = async () =>
 // TODO: Add logic to a method that accepts some content and adds it to the database
 export const putDb = async (content) => {
   const jate = await openDB('jate', 1);
-  const jateStore = jate
-      .transaction('jate', 'readwrite')
-      .objectStore('jate');
-  const result = await jateStore.put({ text: content });
+  const jateStore = jate.transaction('jate', 'readwrite').objectStore('jate');
+  const result = await jateStore.put({ id: 1, text: content });
   return result;
-}
+};
 
 // TODO: Add logic for a method that gets all the content from the database
 export const getDb = async () => {
@@ -29,7 +27,7 @@ export const getDb = async () => {
       .transaction('jate', 'readonly')
       .objectStore('jate');
   const result = jateStore.getAll();
-  console.log('Retrieved data:', result); // Debugging output
+  console.log('Retrieved data:', result); // Testing
   return result;
 }
 

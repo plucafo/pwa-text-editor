@@ -26,12 +26,18 @@ export default class {
     // Fall back to localStorage if nothing is stored in indexeddb, and if neither is available, set the value to header.
     getDb().then((data) => {
       console.info('Loaded data from IndexedDB:', data);
-      const contentToLoad = data && data.length > 0 ? data[0].text : localData || header;
-      this.editor.setValue(contentToLoad);
+      if (data && data.length > 0) {
+        // Get the last entry based on the array length
+        const lastEntry = data[data.length - 1];
+        this.editor.setValue(lastEntry.text);
+      } else {
+        this.editor.setValue(header);
+      }
     });
 
     this.editor.on('change', () => {
       localStorage.setItem('content', this.editor.getValue());
+      putDb(this.editor.getValue());
     });
 
     // Save the content of the editor when the editor itself is loses focus
